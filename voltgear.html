@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLTGEAR — Power your play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D0F10;
+    --bg-alt:#131617;
+    --surface:#191D1E;
+    --surface-hover:#20262A;
+    --border:#2A3033;
+    --text:#F2F4F0;
+    --text-muted:#8B9491;
+    --volt:#E8FF3D;
+    --volt-dim:#B9CC1F;
+    --blue:#4E9BFF;
+    --danger:#FF6B6B;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Space Grotesk',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Chakra Petch',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    margin:0;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--volt);color:#0D0F10;}
+  :focus-visible{outline:2px solid var(--volt);outline-offset:2px;}
+
+  /* ---------- layout shell ---------- */
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px;}
+  @media (max-width:640px){.wrap{padding:0 16px;}}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(13,15,16,0.9);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .header-inner{
+    display:flex;align-items:center;gap:28px;
+    height:72px;
+  }
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Chakra Petch',sans-serif;
+    font-weight:700;font-size:22px;letter-spacing:0.03em;
+    flex-shrink:0;
+  }
+  .logo svg{width:22px;height:22px;color:var(--volt);}
+  nav{display:flex;gap:22px;flex:1;}
+  nav a{
+    font-size:13px;font-weight:500;color:var(--text-muted);
+    text-transform:uppercase;letter-spacing:0.06em;
+    transition:color .15s;
+    white-space:nowrap;
+  }
+  nav a:hover{color:var(--volt);}
+  .search-box{
+    flex:1;max-width:320px;
+    position:relative;
+  }
+  .search-box input{
+    width:100%;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px 14px 9px 34px;
+    color:var(--text);
+    font-family:inherit;font-size:13px;
+  }
+  .search-box input::placeholder{color:var(--text-muted);}
+  .search-box svg{
+    position:absolute;left:11px;top:50%;transform:translateY(-50%);
+    width:14px;height:14px;color:var(--text-muted);
+  }
+  .cart-btn{
+    position:relative;
+    display:flex;align-items:center;gap:8px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:9px 16px;border-radius:8px;
+    font-size:13px;font-weight:600;
+    transition:border-color .15s, background .15s;
+  }
+  .cart-btn:hover{border-color:var(--volt);}
+  .cart-btn svg{width:16px;height:16px;}
+  .cart-badge{
+    position:absolute;top:-6px;right:-6px;
+    background:var(--volt);color:#0D0F10;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;font-weight:700;
+    width:18px;height:18px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  @media (max-width:900px){
+    nav{display:none;}
+    .search-box{max-width:none;}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:72px 0 56px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid var(--border);
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;
+  }
+  @media (max-width:860px){.hero-grid{grid-template-columns:1fr;}}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;color:var(--volt);
+    letter-spacing:0.08em;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:'';width:7px;height:7px;border-radius:50%;
+    background:var(--volt);
+    box-shadow:0 0 8px 1px var(--volt);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+  .hero h1{
+    font-size:clamp(38px,6vw,64px);
+    line-height:0.98;
+    font-weight:700;
+  }
+  .hero h1 span{color:var(--volt);}
+  .hero p{
+    color:var(--text-muted);
+    font-size:16px;line-height:1.6;
+    max-width:440px;
+    margin:20px 0 28px;
+  }
+  .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--volt);color:#0D0F10;
+    border:none;padding:14px 26px;border-radius:8px;
+    font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.03em;
+    transition:transform .15s, box-shadow .15s;
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px -4px rgba(232,255,61,0.4);}
+  .btn-ghost{
+    background:transparent;color:var(--text);
+    border:1px solid var(--border);padding:14px 26px;border-radius:8px;
+    font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.03em;
+    transition:border-color .15s;
+  }
+  .btn-ghost:hover{border-color:var(--volt);color:var(--volt);}
+
+  .hero-visual{
+    position:relative;
+    aspect-ratio:1/1;
+    max-width:380px;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hero-visual svg{width:100%;height:100%;}
+
+  /* circuit trace divider */
+  .trace{width:100%;height:34px;display:block;color:var(--border);}
+  .trace .node{fill:var(--volt);}
+  .trace .line{stroke:var(--border);}
+  .trace .dot{
+    fill:var(--volt);
+    animation:travel 4s linear infinite;
+    offset-path:path('M0,17 L200,17 L220,5 L1040,5 L1060,17 L1240,17');
+  }
+  @keyframes travel{
+    0%{offset-distance:0%;opacity:0;}
+    5%{opacity:1;}
+    95%{opacity:1;}
+    100%{offset-distance:100%;opacity:0;}
+  }
+
+  /* ---------- filter bar ---------- */
+  .filter-section{padding:40px 0 0;}
+  .filter-row{
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:16px;margin-bottom:28px;
+  }
+  .filter-row h2{font-size:26px;}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text-muted);
+    padding:8px 16px;border-radius:100px;
+    font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;
+    transition:all .15s;
+  }
+  .chip:hover{color:var(--text);border-color:var(--text-muted);}
+  .chip.active{
+    background:var(--volt);color:#0D0F10;border-color:var(--volt);
+  }
+  .result-count{color:var(--text-muted);font-size:13px;font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- product grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:18px;
+    padding:0 0 80px;
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    position:relative;
+    transition:border-color .2s, transform .2s;
+  }
+  .card:hover{border-color:var(--volt-dim);transform:translateY(-3px);}
+  .card-top-trace{
+    height:2px;width:100%;background:var(--border);
+    position:relative;overflow:hidden;
+  }
+  .card:hover .card-top-trace{background:var(--volt);}
+  .card-media{
+    height:150px;
+    display:flex;align-items:center;justify-content:center;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(232,255,61,0.06), transparent 60%),
+      var(--bg-alt);
+    position:relative;
+  }
+  .card-media svg{width:64px;height:64px;color:var(--text-muted);transition:color .2s;}
+  .card:hover .card-media svg{color:var(--volt);}
+  .card-tag{
+    position:absolute;top:10px;left:10px;
+    background:var(--bg);border:1px solid var(--border);
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;color:var(--text-muted);
+    padding:3px 8px;border-radius:100px;text-transform:uppercase;
+  }
+  .card-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .card-cat{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:0.06em;
+  }
+  .card-name{font-size:15px;font-weight:600;line-height:1.3;font-family:'Space Grotesk',sans-serif;text-transform:none;}
+  .charge-row{display:flex;align-items:center;gap:8px;}
+  .charge-bar{
+    flex:1;height:5px;background:var(--border);border-radius:100px;overflow:hidden;
+  }
+  .charge-fill{
+    height:100%;background:linear-gradient(90deg,var(--volt-dim),var(--volt));
+    border-radius:100px;
+  }
+  .charge-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);
+    display:flex;align-items:center;gap:3px;white-space:nowrap;
+  }
+  .charge-label svg{width:11px;height:11px;color:var(--volt);}
+  .card-footer{
+    margin-top:auto;
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:8px;border-top:1px solid var(--border);
+  }
+  .price{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;}
+  .price span{color:var(--text-muted);font-size:11px;margin-right:2px;}
+  .add-btn{
+    background:transparent;border:1px solid var(--border);color:var(--text);
+    width:34px;height:34px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .15s;
+  }
+  .add-btn svg{width:16px;height:16px;}
+  .add-btn:hover{background:var(--volt);border-color:var(--volt);color:#0D0F10;}
+  .add-btn.added{background:var(--volt);border-color:var(--volt);color:#0D0F10;}
+
+  .empty-state{
+    grid-column:1/-1;
+    text-align:center;padding:60px 20px;color:var(--text-muted);
+  }
+  .empty-state svg{width:40px;height:40px;color:var(--border);margin-bottom:12px;}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--border);padding:56px 0 32px;background:var(--bg-alt);}
+  .footer-grid{
+    display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;
+    padding-bottom:36px;
+  }
+  @media (max-width:700px){.footer-grid{grid-template-columns:1fr 1fr;}}
+  .footer-col h3{font-size:12px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:14px;}
+  .footer-col a{
+    display:block;font-size:13px;color:var(--text);margin-bottom:10px;
+    transition:color .15s;
+  }
+  .footer-col a:hover{color:var(--volt);}
+  .footer-brand p{color:var(--text-muted);font-size:13px;line-height:1.6;max-width:280px;margin-top:10px;}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+    border-top:1px solid var(--border);padding-top:22px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);
+  }
+
+  /* ---------- cart drawer ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.6);
+    opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:400px;max-width:92vw;
+    background:var(--bg-alt);border-left:1px solid var(--border);
+    z-index:60;
+    transform:translateX(100%);transition:transform .3s ease;
+    display:flex;flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 22px;border-bottom:1px solid var(--border);
+  }
+  .drawer-head h3{font-size:18px;}
+  .close-btn{
+    background:transparent;border:none;color:var(--text-muted);
+    width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+    border-radius:6px;transition:all .15s;
+  }
+  .close-btn:hover{background:var(--surface);color:var(--text);}
+  .close-btn svg{width:18px;height:18px;}
+  .drawer-items{flex:1;overflow-y:auto;padding:16px 22px;}
+  .cart-item{
+    display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);
+  }
+  .cart-item-icon{
+    width:52px;height:52px;background:var(--surface);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .cart-item-icon svg{width:26px;height:26px;color:var(--volt);}
+  .cart-item-info{flex:1;min-width:0;}
+  .cart-item-name{font-size:13px;font-weight:600;margin-bottom:4px;}
+  .cart-item-price{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted);}
+  .qty-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+  .qty-btn{
+    width:22px;height:22px;border-radius:5px;border:1px solid var(--border);
+    background:transparent;color:var(--text);font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .qty-btn:hover{border-color:var(--volt);color:var(--volt);}
+  .qty-val{font-family:'JetBrains Mono',monospace;font-size:12px;min-width:16px;text-align:center;}
+  .remove-btn{
+    background:none;border:none;color:var(--text-muted);font-size:11px;
+    text-decoration:underline;margin-left:auto;
+  }
+  .remove-btn:hover{color:var(--danger);}
+  .drawer-empty{
+    text-align:center;color:var(--text-muted);padding:60px 20px;font-size:13px;
+  }
+  .drawer-empty svg{width:36px;height:36px;color:var(--border);margin-bottom:14px;}
+  .drawer-foot{
+    padding:20px 22px 24px;border-top:1px solid var(--border);
+  }
+  .subtotal-row{
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .subtotal-row .label{color:var(--text-muted);font-size:13px;}
+  .subtotal-row .value{font-size:18px;font-weight:600;}
+  .checkout-btn{
+    width:100%;background:var(--volt);color:#0D0F10;border:none;
+    padding:15px;border-radius:8px;font-weight:700;font-size:14px;
+    text-transform:uppercase;letter-spacing:0.03em;
+  }
+  .checkout-btn:hover{box-shadow:0 6px 20px -4px rgba(232,255,61,0.4);}
+  .checkout-btn:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none;}
+
+  /* ---------- toast ---------- */
+  .toast-wrap{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    z-index:70;display:flex;flex-direction:column;gap:8px;align-items:center;
+  }
+  .toast{
+    background:var(--surface);border:1px solid var(--volt);
+    color:var(--text);padding:12px 20px;border-radius:8px;
+    font-size:13px;font-weight:500;
+    display:flex;align-items:center;gap:10px;
+    animation:toast-in .25s ease, toast-out .25s ease 2.4s forwards;
+    box-shadow:0 8px 24px -6px rgba(0,0,0,0.5);
+  }
+  .toast svg{width:15px;height:15px;color:var(--volt);flex-shrink:0;}
+  @keyframes toast-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes toast-out{to{opacity:0;transform:translateY(-6px);}}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001s !important; transition-duration:0.001s !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ ICON SPRITE ============ -->
+<svg style="display:none">
+  <defs>
+    <symbol id="icon-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+    <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="icon-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></symbol>
+
+    <!-- product schematic icons -->
+    <symbol id="icon-mouse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2c-4 0-6 3-6 8v4a6 6 0 0 0 12 0v-4c0-5-2-8-6-8z"/><path d="M12 2v6"/><path d="M9 8h6"/>
+    </symbol>
+    <symbol id="icon-keyboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="6" width="20" height="12" rx="1.5"/><path d="M6 10h.01M9 10h.01M12 10h.01M15 10h.01M18 10h.01"/><path d="M6 14h12"/>
+    </symbol>
+    <symbol id="icon-headset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 13a9 9 0 0 1 18 0"/><rect x="2" y="13" width="5" height="7" rx="1.5"/><rect x="17" y="13" width="5" height="7" rx="1.5"/>
+    </symbol>
+    <symbol id="icon-controller" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 10h4M8 8v4"/><circle cx="16.5" cy="9.5" r="0.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="11.5" r="0.6" fill="currentColor" stroke="none"/>
+      <path d="M5 9h1.5a1 1 0 0 1 0 2M18 9h1a3 3 0 0 1 3 3v3a2.5 2.5 0 0 1-4.6 1.4L16 13H8l-1.4 1.4A2.5 2.5 0 0 1 2 12.5V12a3 3 0 0 1 3-3h1"/>
+    </symbol>
+    <symbol id="icon-capture" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M12 8.5 9.5 12l2.5 3.5M12 8.5l2.5 3.5-2.5 3.5" opacity="0"/>
+      <path d="m10.5 9 3 3-3 3" />
+    </symbol>
+    <symbol id="icon-chair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h12l-1 8H7L6 3z"/><path d="M7 11l-2 10M17 11l2 10M5 21h14"/><path d="M7 11h10"/>
+    </symbol>
+    <symbol id="icon-mousepad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 10h.01"/>
+    </symbol>
+    <symbol id="icon-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v4M9 22h6"/>
+    </symbol>
+    <symbol id="icon-fan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="1.6"/>
+      <path d="M12 10.4C10 7 9 4 12 2c3 2 2 5 0 8.4zM13.6 12c3.4-2 6.4-3 8.4 0-2 3-5 2-8.4 0zM12 13.6c2 3.4 3 6.4 0 8.4-3-2-2-5 0-8.4zM10.4 12C7 14 4 15 2 12c2-3 5-2 8.4 0z"/>
+    </symbol>
+    <symbol id="icon-earbuds" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 8v5a3 3 0 0 0 3 3v0"/><rect x="5" y="5" width="4" height="5" rx="2"/>
+      <path d="M17 8v5a3 3 0 0 1-3 3v0"/><rect x="15" y="5" width="4" height="5" rx="2"/>
+    </symbol>
+    <symbol id="icon-hub" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="9" width="18" height="6" rx="1.5"/><path d="M7 9V6h4v3M13 9V6h4v3"/><path d="M7 15v0M11 15v0M15 15v0"/>
+    </symbol>
+    <symbol id="icon-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="4" width="20" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="wrap header-inner">
+    <div class="logo"><svg><use href="#icon-bolt"/></svg>VOLTGEAR</div>
+    <nav>
+      <a href="#catalog">Mice</a>
+      <a href="#catalog">Keyboards</a>
+      <a href="#catalog">Headsets</a>
+      <a href="#catalog">Controllers</a>
+      <a href="#catalog">Audio</a>
+      <a href="#catalog">Seating</a>
+    </nav>
+    <div class="search-box">
+      <svg><use href="#icon-search"/></svg>
+      <input id="searchInput" type="text" placeholder="Search gear, e.g. mouse, headset…">
+    </div>
+    <button class="cart-btn" id="cartToggle">
+      <svg><use href="#icon-cart"/></svg>
+      <span>Cart</span>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">LIVE DROP // FREE DISPATCH OVER RS 5,000</div>
+      <h1>Play at<br>full <span>voltage.</span></h1>
+      <p>Precision mice, low-latency keyboards and gear built for the frame that decides the match. Wired for gamers who notice a millisecond.</p>
+      <div class="hero-ctas">
+        <a href="#catalog" class="btn-primary">Shop the drop</a>
+        <a href="#catalog" class="btn-ghost">Browse categories</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg viewBox="0 0 200 200" fill="none" stroke="var(--volt)" stroke-width="1" opacity="0.9">
+        <circle cx="100" cy="100" r="70" stroke="var(--border)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="70" stroke="var(--volt)" stroke-width="2" stroke-dasharray="6 440" stroke-linecap="round">
+          <animate attributeName="stroke-dasharray" values="6 440;300 440;6 440" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <use href="#icon-controller" x="60" y="60" width="80" height="80" stroke="var(--text)" stroke-width="1.2"/>
+        <circle cx="30" cy="100" r="2.5" fill="var(--volt)"/>
+        <circle cx="170" cy="100" r="2.5" fill="var(--volt)"/>
+        <circle cx="100" cy="30" r="2.5" fill="var(--volt)"/>
+        <circle cx="100" cy="170" r="2.5" fill="var(--volt)"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- circuit trace divider -->
+<svg class="trace" viewBox="0 0 1240 34" preserveAspectRatio="none">
+  <path class="line" d="M0,17 L200,17 L220,5 L1040,5 L1060,17 L1240,17" fill="none" stroke-width="1.5"/>
+  <circle class="node" cx="0" cy="17" r="3"/>
+  <circle class="node" cx="220" cy="5" r="3"/>
+  <circle class="node" cx="1060" cy="17" r="3"/>
+  <circle class="node" cx="1240" cy="17" r="3"/>
+  <circle class="dot" r="3.5"/>
+</svg>
+
+<!-- ============ CATALOG ============ -->
+<section class="filter-section wrap" id="catalog">
+  <div class="filter-row">
+    <h2>Full catalog</h2>
+    <span class="result-count mono" id="resultCount">12 items</span>
+  </div>
+  <div class="chip-row" id="chipRow"></div>
+</section>
+
+<section class="wrap">
+  <div class="grid" id="productGrid"></div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col footer-brand">
+        <div class="logo"><svg><use href="#icon-bolt"/></svg>VOLTGEAR</div>
+        <p>Gaming accessories for people who play like the ping matters. Sourced, tested, dispatched fast.</p>
+      </div>
+      <div class="footer-col">
+        <h3>SHOP</h3>
+        <a href="#catalog">Mice</a>
+        <a href="#catalog">Keyboards</a>
+        <a href="#catalog">Headsets</a>
+        <a href="#catalog">Controllers</a>
+      </div>
+      <div class="footer-col">
+        <h3>SUPPORT</h3>
+        <a href="#">Track order</a>
+        <a href="#">Returns</a>
+        <a href="#">Warranty</a>
+        <a href="#">Contact us</a>
+      </div>
+      <div class="footer-col">
+        <h3>COMPANY</h3>
+        <a href="#">About Voltgear</a>
+        <a href="#">Seller center</a>
+        <a href="#">Careers</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 VOLTGEAR — ALL SYSTEMS CHARGED</span>
+      <span>MADE FOR PLAYERS</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your cart</h3>
+    <button class="close-btn" id="closeDrawer"><svg><use href="#icon-close"/></svg></button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="subtotal-row">
+      <span class="label">SUBTOTAL</span>
+      <span class="value mono" id="subtotalVal">Rs 0</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" disabled>Checkout</button>
+  </div>
+</aside>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ================= DATA ================= */
+const PRODUCTS = [
+  {id:1, name:"Volt Apex Wireless Mouse", cat:"Mice", icon:"icon-mouse", price:8999, charge:4.8, tag:"BESTSELLER"},
+  {id:2, name:"Circuit TKL Mechanical Keyboard", cat:"Keyboards", icon:"icon-keyboard", price:15499, charge:4.7, tag:"NEW"},
+  {id:3, name:"Surge Pro Headset", cat:"Headsets", icon:"icon-headset", price:11250, charge:4.6},
+  {id:4, name:"Ampere Elite Controller", cat:"Controllers", icon:"icon-controller", price:9750, charge:4.9, tag:"BESTSELLER"},
+  {id:5, name:"Nova Capture Card 4K", cat:"Capture", icon:"icon-capture", price:22000, charge:4.5},
+  {id:6, name:"Volt Racer Gaming Chair", cat:"Seating", icon:"icon-chair", price:34999, charge:4.4},
+  {id:7, name:"Static Mousepad XL", cat:"Mice", icon:"icon-mousepad", price:2499, charge:4.7},
+  {id:8, name:"Resonance Desktop Mic", cat:"Audio", icon:"icon-mic", price:13800, charge:4.6, tag:"NEW"},
+  {id:9, name:"Cryo Flow Cooling Fan Kit", cat:"Cooling", icon:"icon-fan", price:6200, charge:4.3},
+  {id:10, name:"Pulse RGB Keyboard 60%", cat:"Keyboards", icon:"icon-keyboard", price:12999, charge:4.8},
+  {id:11, name:"Voltbud Tri-Band Earbuds", cat:"Audio", icon:"icon-earbuds", price:7500, charge:4.5},
+  {id:12, name:"Overclock USB-C Hub", cat:"Accessories", icon:"icon-hub", price:4300, charge:4.2},
+];
+
+const CATEGORIES = ["All", ...Array.from(new Set(PRODUCTS.map(p=>p.cat)))];
+
+let activeCategory = "All";
+let searchTerm = "";
+let cart = {}; // id -> qty
+
+/* ================= HELPERS ================= */
+function fmtPKR(n){ return "Rs " + n.toLocaleString("en-PK"); }
+
+function showToast(msg, iconId="icon-check"){
+  const wrap = document.getElementById("toastWrap");
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.innerHTML = `<svg><use href="#${iconId}"/></svg><span>${msg}</span>`;
+  wrap.appendChild(el);
+  setTimeout(()=> el.remove(), 2700);
+}
+
+/* ================= RENDER: CHIPS ================= */
+function renderChips(){
+  const row = document.getElementById("chipRow");
+  row.innerHTML = "";
+  CATEGORIES.forEach(cat=>{
+    const chip = document.createElement("button");
+    chip.className = "chip" + (cat===activeCategory ? " active" : "");
+    chip.textContent = cat;
+    chip.addEventListener("click", ()=>{
+      activeCategory = cat;
+      renderChips();
+      renderGrid();
+    });
+    row.appendChild(chip);
+  });
+}
+
+/* ================= RENDER: GRID ================= */
+function renderGrid(){
+  const grid = document.getElementById("productGrid");
+  const term = searchTerm.trim().toLowerCase();
+  const items = PRODUCTS.filter(p=>{
+    const matchesCat = activeCategory === "All" || p.cat === activeCategory;
+    const matchesSearch = !term || p.name.toLowerCase().includes(term) || p.cat.toLowerCase().includes(term);
+    return matchesCat && matchesSearch;
+  });
+
+  document.getElementById("resultCount").textContent = items.length + (items.length===1 ? " item" : " items");
+
+  if(items.length === 0){
+    grid.innerHTML = `<div class="empty-state"><svg><use href="#icon-search"/></svg><div>No gear matches that search.</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(p=>`
+    <div class="card">
+      <div class="card-top-trace"></div>
+      <div class="card-media">
+        ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ""}
+        <svg><use href="#${p.icon}"/></svg>
+      </div>
+      <div class="card-body">
+        <span class="card-cat">${p.cat}</span>
+        <div class="card-name">${p.name}</div>
+        <div class="charge-row">
+          <div class="charge-bar"><div class="charge-fill" style="width:${(p.charge/5*100).toFixed(0)}%"></div></div>
+          <span class="charge-label"><svg><use href="#icon-bolt"/></svg>${p.charge}</span>
+        </div>
+        <div class="card-footer">
+          <span class="price"><span>PKR</span>${fmtPKR(p.price).replace('Rs ','')}</span>
+          <button class="add-btn" data-id="${p.id}" aria-label="Add ${p.name} to cart">
+            <svg><use href="#icon-plus"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  grid.querySelectorAll(".add-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = Number(btn.dataset.id);
+      addToCart(id);
+      btn.classList.add("added");
+      btn.innerHTML = `<svg><use href="#icon-check"/></svg>`;
+      setTimeout(()=>{
+        btn.classList.remove("added");
+        btn.innerHTML = `<svg><use href="#icon-plus"/></svg>`;
+      }, 900);
+    });
+  });
+}
+
+/* ================= CART ================= */
+function addToCart(id){
+  cart[id] = (cart[id] || 0) + 1;
+  const p = PRODUCTS.find(p=>p.id===id);
+  showToast(`${p.name} added to cart`, "icon-bolt");
+  renderCart();
+}
+
+function changeQty(id, delta){
+  if(!cart[id]) return;
+  cart[id] += delta;
+  if(cart[id] <= 0) delete cart[id];
+  renderCart();
+}
+
+function removeFromCart(id){
+  delete cart[id];
+  renderCart();
+}
+
+function cartCount(){
+  return Object.values(cart).reduce((a,b)=>a+b,0);
+}
+
+function cartSubtotal(){
+  return Object.entries(cart).reduce((sum,[id,qty])=>{
+    const p = PRODUCTS.find(p=>p.id===Number(id));
+    return sum + p.price*qty;
+  },0);
+}
+
+function renderCart(){
+  document.getElementById("cartBadge").textContent = cartCount();
+  const itemsEl = document.getElementById("drawerItems");
+  const entries = Object.entries(cart);
+
+  if(entries.length === 0){
+    itemsEl.innerHTML = `<div class="drawer-empty"><svg><use href="#icon-empty"/></svg><div>Cart's empty. Time to gear up.</div></div>`;
+  } else {
+    itemsEl.innerHTML = entries.map(([id,qty])=>{
+      const p = PRODUCTS.find(p=>p.id===Number(id));
+      return `
+        <div class="cart-item">
+          <div class="cart-item-icon"><svg><use href="#${p.icon}"/></svg></div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${p.name}</div>
+            <div class="cart-item-price mono">${fmtPKR(p.price)}</div>
+            <div class="qty-row">
+              <button class="qty-btn" data-action="dec" data-id="${p.id}">−</button>
+              <span class="qty-val">${qty}</span>
+              <button class="qty-btn" data-action="inc" data-id="${p.id}">+</button>
+              <button class="remove-btn" data-action="remove" data-id="${p.id}">remove</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    itemsEl.querySelectorAll("[data-action]").forEach(btn=>{
+      const id = Number(btn.dataset.id);
+      const action = btn.dataset.action;
+      btn.addEventListener("click", ()=>{
+        if(action==="inc") changeQty(id, 1);
+        if(action==="dec") changeQty(id, -1);
+        if(action==="remove") removeFromCart(id);
+      });
+    });
+  }
+
+  document.getElementById("subtotalVal").textContent = fmtPKR(cartSubtotal());
+  document.getElementById("checkoutBtn").disabled = entries.length === 0;
+}
+
+/* ================= DRAWER TOGGLE ================= */
+const drawer = document.getElementById("drawer");
+const overlay = document.getElementById("overlay");
+function openDrawer(){ drawer.classList.add("open"); overlay.classList.add("open"); }
+function closeDrawerFn(){ drawer.classList.remove("open"); overlay.classList.remove("open"); }
+document.getElementById("cartToggle").addEventListener("click", openDrawer);
+document.getElementById("closeDrawer").addEventListener("click", closeDrawerFn);
+overlay.addEventListener("click", closeDrawerFn);
+
+/* ================= CHECKOUT (mock) ================= */
+document.getElementById("checkoutBtn").addEventListener("click", ()=>{
+  showToast("Order placed — your gear is charging up", "icon-bolt");
+  cart = {};
+  renderCart();
+  closeDrawerFn();
+});
+
+/* ================= SEARCH ================= */
+document.getElementById("searchInput").addEventListener("input", (e)=>{
+  searchTerm = e.target.value;
+  renderGrid();
+});
+
+/* ================= INIT ================= */
+renderChips();
+renderGrid();
+renderCart();
+</script>
+</body>
+</html>
